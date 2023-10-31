@@ -34,3 +34,7 @@ take taken idx (Value x0 x1 x2) =
 
 check :: Value -> Item.Value
 check (Value x0 x1 x2) = Item.check3 x0 x1 x2
+
+isFull :: Value -> Bool
+isFull (Value (Just _) (Just _) (Just _)) = True
+isFull _ = False

@@ -2,7 +2,6 @@ module Main (main) where
 
 import qualified Table
 import qualified Cell
-import Control.Exception (catch)
 import Control.Monad (when)
 import Text.Read (readMaybe)
 
@@ -31,24 +30,31 @@ check :: Table.Value -> IO Bool
 check table = do
     let
         wins = Table.check table
-        continue = length wins == 0
-    if continue then
-        putStrLn "(Continue)"
-    else
-        putStrLn $ show (head wins) ++ " won the game!"
-    pure continue
+    if null wins then
+        if Table.isFull table then do
+            putStrLn "Draw!"
+            pure False
+        else do
+            putStrLn "Okay!"
+            pure True
+    else do
+        putStrLn ""
+        print table
+        putStrLn $ show (head wins) ++ " won the game!\n"
+        pure False
 
 prompt :: Cell.Taken -> Table.Value -> IO Table.Value
 prompt cell table = do
+    putStrLn ""
     putStrLn $ show cell ++ " player, your order now!"
-    putStrLn $ show table
+    print table
     putStrLn "Enter a number where you want to put: "
     askIdx cell table
 
 askIdx :: Cell.Taken -> Table.Value -> IO Table.Value
 askIdx cell table = do
     str <- getLine
-    idxResult <- pure $ readMaybe str
+    let idxResult = readMaybe str
     case idxResult of
         Just idx -> case Table.take cell idx table of
             Just table' -> pure table'
@@ -58,4 +64,3 @@ askIdx cell table = do
         Nothing -> do
             putStrLn "Invalid index! Enter a valid one:"
             askIdx cell table
-        

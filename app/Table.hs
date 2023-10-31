@@ -45,3 +45,6 @@ check (Value (Row.Value x00 x01 x02) (Row.Value x10 x11 x12) (Row.Value x20 x21 
         , Cell.check3 x00 x11 x22
         , Cell.check3 x02 x11 x20
         ]
+
+isFull :: Value -> Bool
+isFull (Value x0 x1 x2) = Row.isFull x0 && Row.isFull x1 && Row.isFull x2
